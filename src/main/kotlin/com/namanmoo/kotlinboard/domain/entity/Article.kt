@@ -1,5 +1,6 @@
 package com.namanmoo.kotlinboard.domain.entity
 
+import com.namanmoo.kotlinboard.domain.dto.ArticleDto
 import jakarta.persistence.*
 import lombok.Getter
 import lombok.Setter
@@ -53,5 +54,12 @@ class Article(
         result = 31 * result + password.hashCode()
         result = 31 * result + (id.hashCode() ?: 0)
         return result
+    }
+
+    fun checkPassword(password: String): Boolean = this.password == password
+
+    fun updateArticle(articleRequest: ArticleDto.Request) {
+        this.title = articleRequest.title
+        this.content = articleRequest.content
     }
 }

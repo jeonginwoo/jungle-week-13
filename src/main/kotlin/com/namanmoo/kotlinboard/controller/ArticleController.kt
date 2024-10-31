@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/articles")
 @RestController
 class ArticleController(
-    @Autowired val articleService: ArticleService
+    private val articleService: ArticleService
 ) {
 
     @GetMapping("")
