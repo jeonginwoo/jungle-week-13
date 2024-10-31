@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.repository
 
-import com.namanmoo.kotlinboard.domain.Article
+import com.namanmoo.kotlinboard.domain.entity.Article
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 

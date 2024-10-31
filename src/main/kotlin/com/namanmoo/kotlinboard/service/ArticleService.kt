@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.service
 
-import com.namanmoo.kotlinboard.domain.Article
+import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.domain.dto.ArticleDto
 import com.namanmoo.kotlinboard.repository.ArticleRepository
 import org.springframework.data.domain.Sort

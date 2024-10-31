@@ -1,9 +1,10 @@
-package com.namanmoo.kotlinboard.domain
+package com.namanmoo.kotlinboard.domain.entity
 
 import jakarta.persistence.*
 import lombok.Getter
 import lombok.Setter
 import lombok.ToString
+import org.springframework.data.annotation.CreatedBy
 
 @Getter
 @ToString
@@ -17,6 +18,10 @@ import lombok.ToString
     ]
 )
 class Article(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
+
     @Setter
     @Column(nullable = false)
     var title: String,
@@ -28,17 +33,13 @@ class Article(
     @Setter
     @Column(nullable = false)
     var password: String,
+
+    @CreatedBy
+    @Column(nullable = false)
+    var createdBy: String = ""
 ) : BaseEntity() {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-
-    protected constructor() : this("", "", "") // JPA 기본 생성자
-
-    companion object {
-        fun of(title: String, content: String, password: String): Article = Article(title, content, password)
-    }
+    protected constructor() : this(title="", content="", password="") // JPA 기본 생성자
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

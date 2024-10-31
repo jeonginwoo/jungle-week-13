@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.domain.dto
 
-import com.namanmoo.kotlinboard.domain.Article
+import com.namanmoo.kotlinboard.domain.entity.Article
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -12,7 +12,7 @@ class ArticleDto {
         val password: String
     ) : Serializable {
         fun toArticle(): Article {
-            return Article(title, content, password)
+            return Article(title=title, content=content, password=password)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.namanmoo.kotlinboard.domain
+package com.namanmoo.kotlinboard.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
@@ -17,10 +17,6 @@ import java.time.LocalDateTime
 @EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
 class BaseEntity {
-
-    @CreatedBy
-    @Column(nullable = false)
-    var createdBy: String = ""
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate

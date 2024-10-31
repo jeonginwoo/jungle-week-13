@@ -1,6 +1,5 @@
 package com.namanmoo.kotlinboard.controller
 
-import com.namanmoo.kotlinboard.domain.Article
 import com.namanmoo.kotlinboard.domain.dto.ArticleDto
 import com.namanmoo.kotlinboard.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
