@@ -1,3 +1,8 @@
+INSERT INTO user (user_name, nickname, password, created_at, modified_at) VALUES ('user1', 'aaa', '1111',  now(), now());
+INSERT INTO user (user_name, nickname, password, created_at, modified_at) VALUES ('user2', 'bbb', '1111',  now(), now());
+INSERT INTO user (user_name, nickname, password, created_at, modified_at) VALUES ('user3', 'ccc', '1111',  now(), now());
+INSERT INTO user (user_name, nickname, password, created_at, modified_at) VALUES ('user4', 'ddd', '1111',  now(), now());
+
 INSERT INTO article (title, content, password, created_by, created_at, modified_at) VALUES ('Lorem Ipsum', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1111', 'jiw413', '2023-01-15 10:20:30', '2023-01-15 12:22:45');
 INSERT INTO article (title, content, password, created_by, created_at, modified_at) VALUES ('Aliquam Eget', 'Aliquam eget ante nec quam varius tincidunt.', '1111', 'jiw413', '2023-02-10 14:35:15', '2023-02-10 16:47:20');
 INSERT INTO article (title, content, password, created_by, created_at, modified_at) VALUES ('Vestibulum Ante', 'Vestibulum ante ipsum primis in faucibus orci luctus.', '1111', 'jiw413', '2023-03-05 09:15:50', '2023-03-05 11:45:00');
