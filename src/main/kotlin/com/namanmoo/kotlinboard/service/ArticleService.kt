@@ -25,7 +25,7 @@ class ArticleService(
 
     fun findById(id: Long): Article {
         return articleRepository.findById(id)
-            .orElseThrow { NoSuchElementException("[id: $id] 게시글을 찾을 수 없습니다.") }
+            .orElseThrow{NoSuchElementException("게시글(id: $id)을 찾을 수 없습니다.")}
     }
 
     fun findArticle(id: Long): ArticleDto.Response {
