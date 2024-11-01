@@ -13,7 +13,7 @@ class ArticleService(
     private val articleRepository: ArticleRepository
 ) {
 
-    fun addArticle(articleRequest: ArticleDto.Request): ArticleDto.Response {
+    fun createArticle(articleRequest: ArticleDto.Request): ArticleDto.Response {
         val article = articleRequest.toArticle()
         return ArticleDto.Response.toResponse(articleRepository.save(article))
     }

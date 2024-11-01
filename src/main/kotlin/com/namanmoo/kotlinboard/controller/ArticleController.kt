@@ -2,7 +2,6 @@ package com.namanmoo.kotlinboard.controller
 
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.service.ArticleService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -22,7 +21,7 @@ class ArticleController(
     fun createArticle(
         @RequestBody articleRequest: ArticleDto.Request
     ): ResponseEntity<ArticleDto.Response> {
-        val response = articleService.addArticle(articleRequest)
+        val response = articleService.createArticle(articleRequest)
         return ResponseEntity.ok(response)
     }
 

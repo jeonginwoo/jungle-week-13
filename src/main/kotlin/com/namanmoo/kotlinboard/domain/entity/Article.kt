@@ -40,6 +40,10 @@ class Article(
     var createdBy: String = ""
 ) : BaseEntity() {
 
+    companion object {
+        fun of(title: String, content: String, password: String): Article = Article(title=title, content=content, password=password)
+    }
+
     protected constructor() : this(title="", content="", password="") // JPA 기본 생성자
 
     override fun equals(other: Any?): Boolean {
