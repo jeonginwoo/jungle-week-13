@@ -11,7 +11,11 @@ class ArticleDto {
         val content: String,
         val password: String
     ): Serializable {
-        fun toArticle() = Article(title=title, content=content, password=password)
+        fun toArticle() = Article(
+            title=title,
+            content=content,
+            password=password
+        )
     }
 
     data class Response(

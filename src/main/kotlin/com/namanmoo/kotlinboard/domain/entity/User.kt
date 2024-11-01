@@ -1,5 +1,6 @@
 package com.namanmoo.kotlinboard.domain.entity
 
+import com.namanmoo.kotlinboard.service.dto.UserDto
 import jakarta.persistence.*
 
 @Entity
@@ -14,11 +15,17 @@ class User(
     @Column(unique = true, nullable = false)
     var userName: String,
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     var nickname: String,
 
     @Column(nullable = false)
     var password: String,
 ): BaseEntity() {
+
     fun checkPassword(password: String) = this.password == password
+
+    fun updateUser(userRequest: UserDto.Request) {
+        this.nickname = userRequest.nickname
+        this.password = userRequest.password
+    }
 }

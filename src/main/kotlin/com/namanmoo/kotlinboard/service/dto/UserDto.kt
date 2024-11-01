@@ -6,14 +6,26 @@ import java.time.LocalDateTime
 
 class UserDto {
 
+    data class Request(
+        val nickname: String,
+        val password: String
+    ): Serializable
+
     data class Response(
         val userName: String,
         val nickname: String,
+        val password: String,
         val createdAt: LocalDateTime,
         val modifiedAt: LocalDateTime
-    ) {
+    ): Serializable {
         companion object {
-            fun toResponse(user: User) = Response(userName=user.userName, nickname=user.nickname, createdAt=user.createdAt, modifiedAt=user.modifiedAt)
+            fun toResponse(user: User) = Response(
+                userName=user.userName,
+                nickname=user.nickname,
+                password=user.password,
+                createdAt=user.createdAt,
+                modifiedAt=user.modifiedAt
+            )
         }
     }
 

@@ -28,8 +28,25 @@ class UserController(
     @PostMapping("/sign-up")
     fun userSignUp(
         @RequestBody signUpInfo: UserDto.SignUp
-    ): ResponseEntity<Map<String, Any>> {
+    ): ResponseEntity<UserDto.Response> {
         val response = userService.userSignUp(signUpInfo)
+        return ResponseEntity.ok(response)
+    }
+
+    @PutMapping("/{user-name}")
+    fun updateUser(
+        @RequestBody userRequest: UserDto.Request,
+        @PathVariable("user-name") userName: String
+    ): ResponseEntity<UserDto.Response> {
+        val response = userService.updateUser(userRequest, userName)
+        return ResponseEntity.ok(response)
+    }
+
+    @DeleteMapping("/{user-name}")
+    fun deleteUser(
+        @PathVariable("user-name") userName: String
+    ): ResponseEntity<Map<String, Any>> {
+        val response = userService.deleteUser(userName)
         return ResponseEntity.ok(response)
     }
 }
