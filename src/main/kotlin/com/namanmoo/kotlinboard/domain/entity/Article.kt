@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.domain.entity
 
-import com.namanmoo.kotlinboard.domain.dto.ArticleDto
+import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import jakarta.persistence.*
 import lombok.Getter
 import lombok.Setter

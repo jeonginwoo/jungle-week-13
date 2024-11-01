@@ -1,7 +1,7 @@
 package com.namanmoo.kotlinboard.service
 
 import com.namanmoo.kotlinboard.domain.entity.Article
-import com.namanmoo.kotlinboard.domain.dto.ArticleDto
+import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.repository.ArticleRepository
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -20,7 +20,7 @@ class ArticleService(
 
     fun findAllArticles(): List<ArticleDto.Response> {
         val articleList = articleRepository.findAll(Sort.by("createdAt").descending())
-        return articleList.map{ArticleDto.Response.toResponse(it)}
+        return articleList.map{ ArticleDto.Response.toResponse(it)}
     }
 
     fun findById(id: Long): Article {

@@ -1,4 +1,4 @@
-package com.namanmoo.kotlinboard.domain.dto
+package com.namanmoo.kotlinboard.service.dto
 
 import com.namanmoo.kotlinboard.domain.entity.Article
 import java.io.Serializable
