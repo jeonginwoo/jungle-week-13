@@ -2,13 +2,8 @@ package com.namanmoo.kotlinboard.domain.entity
 
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import jakarta.persistence.*
-import lombok.Getter
-import lombok.Setter
-import lombok.ToString
 import org.springframework.data.annotation.CreatedBy
 
-@Getter
-@ToString
 @Entity
 @Table(
     name = "article",
@@ -23,15 +18,12 @@ class Article(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @Setter
     @Column(nullable = false)
     var title: String,
 
-    @Setter
     @Column(nullable = false, length = 10000)
     var content: String,
 
-    @Setter
     @Column(nullable = false)
     var password: String,
 
