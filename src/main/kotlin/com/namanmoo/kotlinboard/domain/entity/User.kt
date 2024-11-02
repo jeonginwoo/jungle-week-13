@@ -5,7 +5,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(
-    name = "user",
+    name = "users",
     indexes = [
         Index(columnList = "userName")
     ]

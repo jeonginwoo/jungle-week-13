@@ -30,6 +30,9 @@ spring:
     base-path: /api
     detection-strategy: annotated
 
+jwt:
+  secret: dabc43b4f94b32f6e45eada11a8bf3093009f3f8
+
 ---
 
 #spring:
