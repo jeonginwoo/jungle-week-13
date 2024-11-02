@@ -1,8 +1,9 @@
 package com.namanmoo.kotlinboard.service.dto
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.User
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -10,7 +11,6 @@ import java.time.LocalDateTime
 class UserDto {
 
     data class Request(
-        @JsonIgnore
         @JsonProperty("userName")
         @field:Pattern(
             regexp = "^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{4,10}\$",
@@ -39,12 +39,18 @@ class UserDto {
         val password: String
             get() = _password!!
 
-        fun toUser() = User(userName=userName, nickname=nickname, password=password)
+        fun toUser() = User(
+            userName=userName,
+            nickname=nickname,
+            role=ROLE.MEMBER,
+            password=password
+        )
     }
 
     data class Response(
         val userName: String,
         val nickname: String,
+        val userRole: String,
         val password: String,
         val createdAt: LocalDateTime,
         val modifiedAt: LocalDateTime
@@ -53,6 +59,7 @@ class UserDto {
             fun toResponse(user: User) = Response(
                 userName=user.userName,
                 nickname=user.nickname,
+                userRole=user.role.toString(),
                 password=user.password,
                 createdAt=user.createdAt,
                 modifiedAt=user.modifiedAt
@@ -60,10 +67,20 @@ class UserDto {
         }
     }
 
-//    data class Login(
-//        val userName: String,
-//        val password: String
-//    ): Serializable
+    data class Login(
+        @field:NotBlank
+        @JsonProperty("userName")
+        private val _userName: String?,
+
+        @field:NotBlank
+        @JsonProperty("password")
+        private val _password: String?
+    ): Serializable {
+        val userName: String
+            get() = _userName!!
+        val password: String
+            get() = _password!!
+    }
 
 //    data class SignUp(
 //        val userName: String,

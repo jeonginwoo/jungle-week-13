@@ -1,10 +1,14 @@
 package com.namanmoo.kotlinboard.controller
 
-import com.namanmoo.kotlinboard.common.BaseResponse
+import com.namanmoo.kotlinboard.common.dto.BaseResponse
+import com.namanmoo.kotlinboard.common.autority.TokenInfo
+import com.namanmoo.kotlinboard.common.dto.CustomUser
 import com.namanmoo.kotlinboard.service.UserService
 import com.namanmoo.kotlinboard.service.dto.UserDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/user")
@@ -19,20 +23,27 @@ class UserController(
         return ResponseEntity.ok(response)
     }
 
+    @GetMapping("/my-info")
+    fun myInfo(): ResponseEntity<UserDto.Response> {
+        val userName = userService.getCurrentUsername()
+        val response = userService.findUser(userName)
+        return ResponseEntity.ok(response)
+    }
+
     @PostMapping("/login")
     fun userLogin(
-        @RequestBody @Valid userRequest: UserDto.Request
-    ): BaseResponse<Map<String, Any>> {
-        val response = userService.userLogin(userRequest)
+        @RequestBody @Valid userRequest: UserDto.Login
+    ): BaseResponse<TokenInfo> {
+        val response = userService.login(userRequest)
         return BaseResponse(data=response)
     }
 
     @PostMapping("/sign-up")
     fun userSignUp(
         @RequestBody @Valid userRequest: UserDto.Request
-    ): BaseResponse<UserDto.Response> {
-        val response = userService.userSignUp(userRequest)
-        return BaseResponse(data=response)
+    ): BaseResponse<String> {
+        val response = userService.signUp(userRequest)
+        return BaseResponse(message=response)
     }
 
     @PutMapping("/{user-name}")

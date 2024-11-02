@@ -1,4 +1,4 @@
-package com.namanmoo.kotlinboard.common
+package com.namanmoo.kotlinboard.common.dto
 
 import com.namanmoo.kotlinboard.common.status.ResultCode
 

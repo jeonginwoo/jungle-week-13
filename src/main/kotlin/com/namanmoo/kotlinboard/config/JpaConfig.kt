@@ -1,5 +1,6 @@
 package com.namanmoo.kotlinboard.config
 
+import com.namanmoo.kotlinboard.service.UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.AuditorAware
@@ -8,9 +9,20 @@ import java.util.*
 
 @EnableJpaAuditing
 @Configuration
-class JpaConfig {
+class JpaConfig(
+    private val userService: UserService,
+) {
+//    @Bean
+//    fun auditorAware(): AuditorAware<String> {
+//        return AuditorAware {
+//            Optional.of(userService.getCurrentUsername())
+//        }
+//    }
     @Bean
     fun auditorAware(): AuditorAware<String> {
-        return AuditorAware { Optional.of("jiw413") } // TODO: 스프링 사큐리티로 인증 기능을 붙이게 될 때 수정
+        return AuditorAware {
+            val username = runCatching { userService.getCurrentUsername() }.getOrNull()
+            Optional.ofNullable(username) // 인증되지 않은 경우 null 반환
+        }
     }
 }
