@@ -1,5 +1,6 @@
 package com.namanmoo.kotlinboard.service
 
+import com.namanmoo.kotlinboard.common.exception.InvalidInputException
 import com.namanmoo.kotlinboard.domain.entity.User
 import com.namanmoo.kotlinboard.repository.UserRepository
 import com.namanmoo.kotlinboard.service.dto.UserDto
@@ -22,22 +23,22 @@ class UserService(
             .orElseThrow{ NoSuchElementException("사용자($userName)를 찾을 수 없습니다.") }
     }
 
-    fun userLogin(loginInfo: UserDto.Login): Map<String, Any> {
-        val user = findUser(loginInfo.userName)
-        if (!user.checkPassword(loginInfo.password)) {
-            throw IllegalArgumentException("패스워드가 일치하지 않습니다.")
+    fun userLogin(userRequest: UserDto.Request): Map<String, Any> {
+        val user = findUser(userRequest.userName)
+        if (!user.checkPassword(userRequest.password)) {
+            throw InvalidInputException("패스워드가 일치하지 않습니다.")
         }
         return mapOf(
             "message" to "로그인 성공",
-            "userName" to loginInfo.userName
+            "userName" to userRequest.userName
         )
     }
 
-    fun userSignUp(signUpInfo: UserDto.SignUp): UserDto.Response {
-        if (userRepository.existsById(signUpInfo.userName)) {
-            throw IllegalArgumentException("(${signUpInfo.userName}) 이미 존재하는 사용자 이름입니다.")
+    fun userSignUp(userRequest: UserDto.Request): UserDto.Response {
+        if (userRepository.existsById(userRequest.userName)) {
+            throw InvalidInputException("(${userRequest.userName}) 이미 존재하는 사용자 이름입니다.")
         }
-        val user = signUpInfo.toUser()
+        val user = userRequest.toUser()
         return UserDto.Response.toResponse(userRepository.save(user))
     }
 
