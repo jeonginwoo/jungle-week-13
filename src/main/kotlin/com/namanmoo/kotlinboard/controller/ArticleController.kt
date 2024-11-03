@@ -23,7 +23,7 @@ class ArticleController(
         @RequestBody articleRequest: ArticleDto.Request
     ): BaseResponse<ArticleDto.Response> {
         val response = articleService.createArticle(articleRequest)
-        return BaseResponse(data=response)
+        return BaseResponse(data = response)
     }
 
     @GetMapping("/{article-id}")
@@ -40,7 +40,7 @@ class ArticleController(
         @PathVariable("article-id") articleId: Long
     ): BaseResponse<ArticleDto.Response> {
         val response = articleService.updateArticle(articleRequest, articleId)
-        return BaseResponse(data=response)
+        return BaseResponse(data = response)
     }
 
     @DeleteMapping("/{article-id}")
@@ -48,6 +48,6 @@ class ArticleController(
         @PathVariable("article-id") articleId: Long
     ): BaseResponse<String> {
         val response = articleService.deleteArticle(articleId)
-        return BaseResponse(message=response)
+        return BaseResponse(message = response)
     }
 }

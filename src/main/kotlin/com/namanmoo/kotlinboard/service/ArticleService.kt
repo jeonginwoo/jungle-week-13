@@ -1,16 +1,18 @@
 package com.namanmoo.kotlinboard.service
 
+import com.namanmoo.kotlinboard.common.exception.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.repository.ArticleRepository
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.NoSuchElementException
 
 @Service
 class ArticleService(
-    private val articleRepository: ArticleRepository
+    private val articleRepository: ArticleRepository,
+    private val userService: UserService
 ) {
 
     fun createArticle(articleRequest: ArticleDto.Request): ArticleDto.Response {
@@ -19,7 +21,13 @@ class ArticleService(
     }
 
     fun findAllArticles(): List<ArticleDto.Response> {
-        val articleList = articleRepository.findAll(Sort.by("createdAt").descending())
+        val articleList = articleRepository.findAllByOrderByCreatedAtDesc()
+        return articleList.map{ ArticleDto.Response.toResponse(it)}
+    }
+
+    fun findArticlesInUser(): List<ArticleDto.Response> {
+        val user = userService.getCurrentUser()
+        val articleList = articleRepository.findAllByCreatedByOrderByCreatedAtDesc(user.userName)
         return articleList.map{ ArticleDto.Response.toResponse(it)}
     }
 
@@ -35,13 +43,22 @@ class ArticleService(
     @Transactional
     fun updateArticle(articleRequest: ArticleDto.Request, articleId: Long): ArticleDto.Response {
         val article = findById(articleId)
+        validateUser(article)
         article.updateArticle(articleRequest)
         return ArticleDto.Response.toResponse(article)
     }
 
     fun deleteArticle(articleId: Long): String {
         val article = findById(articleId)
+        validateUser(article)
         articleRepository.deleteById(articleId)
         return "삭제 성공"
+    }
+
+    fun validateUser(article: Article) {
+        val user = userService.getCurrentUser()
+        if (user.role != ROLE.ADMIN && user.userName != article.createdBy) {
+            throw UserNotAuthorizedException("사용자가 이 게시글을 수정하거나 삭제할 권한이 없습니다.")
+        }
     }
 }

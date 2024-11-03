@@ -1,25 +1,28 @@
 package com.namanmoo.kotlinboard.service
 
+import com.namanmoo.kotlinboard.common.exception.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
+import com.namanmoo.kotlinboard.domain.entity.User
 import com.namanmoo.kotlinboard.repository.ArticleRepository
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
-import org.springframework.data.domain.Sort
 import java.util.*
 
 class ArticleServiceTest {
     private lateinit var articleService: ArticleService
     private lateinit var articleRepository: ArticleRepository
+    private lateinit var userService: UserService
 
     @BeforeEach
     fun setUp() {
-        articleRepository = mock()
-        articleService = ArticleService(articleRepository)
+        articleRepository = mock(ArticleRepository::class.java)
+        userService = mock(UserService::class.java)
+        articleService = ArticleService(articleRepository, userService)
     }
 
     @Test
@@ -27,14 +30,12 @@ class ArticleServiceTest {
         // given
         val articleRequest = ArticleDto.Request(
             title = "Test Title",
-            content = "Test Content",
-            password = "1234",
+            content = "Test Content"
         )
 
-        val article = Article.of(
+        val article = Article(
             title = "Test Title",
-            content = "Test Content",
-            password = "1234",
+            content = "Test Content"
         )
 
         `when`(articleRepository.save(any(Article::class.java))).thenReturn(article)
@@ -52,10 +53,9 @@ class ArticleServiceTest {
         // given
         val id = 1L
 
-        val article = Article.of(
+        val article = Article(
             title = "Test Title",
-            content = "Test Content",
-            password = "1234"
+            content = "Test Content"
         )
 
         `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
@@ -71,24 +71,18 @@ class ArticleServiceTest {
     @Test
     fun `전체 게시글 조회 성공 테스트`() {
         // given
-        val articleList = mutableListOf<Article>()
-        for (i in 1..3) {
-            articleList.add(
-                Article.of(
-                    title = "Test${i} Title",
-                    content = "Test${i} Content",
-                    password = "1234"
-                )
-            )
-        }
+        val articleList = listOf(
+            Article(title = "Test1 Title", content = "Test1 Content"),
+            Article(title = "Test2 Title", content = "Test2 Content")
+        )
 
-
-        `when`(articleRepository.findAll(Sort.by("createdAt").descending())).thenReturn(articleList)
+        `when`(articleRepository.findAllByOrderByCreatedAtDesc()).thenReturn(articleList)
 
         // when
         val response = articleService.findAllArticles()
 
         // then
+        assertEquals(response.size, articleList.size)
         for (i in articleList.indices) {
             assertEquals(response[i].title, articleList[i].title)
             assertEquals(response[i].content, articleList[i].content)
@@ -100,18 +94,18 @@ class ArticleServiceTest {
         // given
         val articleRequest = ArticleDto.Request(
             title = "Update Title",
-            content = "Update Content",
-            password = "1234"
+            content = "Update Content"
         )
         val articleId = 1L
 
-        val article = Article.of(
+        val article = Article(
             title = "Test Title",
             content = "Test Content",
-            password = "1234"
+            createdBy = "user1"
         )
 
         `when`(articleRepository.findById(articleId)).thenReturn(Optional.of(article))
+        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user1", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when
         val response = articleService.updateArticle(articleRequest, articleId)
@@ -123,25 +117,25 @@ class ArticleServiceTest {
     }
 
     @Test
-    fun `게시글 수정 실패 테스트`() {
+    fun `게시글 수정 실패 테스트 - 권한 없음`() {
         // given
         val articleRequest = ArticleDto.Request(
             title = "Update Title",
-            content = "Update Content",
-            password = "1111"
+            content = "Update Content"
         )
         val articleId = 1L
 
-        val article = Article.of(
+        val article = Article(
             title = "Test Title",
             content = "Test Content",
-            password = "1234"
+            createdBy = "user1"
         )
 
         `when`(articleRepository.findById(articleId)).thenReturn(Optional.of(article))
+        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when, then
-        assertThrows<IllegalArgumentException> {
+        assertThrows<UserNotAuthorizedException> {
             articleService.updateArticle(articleRequest, articleId)
         }
     }
@@ -150,40 +144,40 @@ class ArticleServiceTest {
     fun `게시글 삭제 성공 테스트`() {
         // given
         val id = 1L
-        val password = ArticleDto.Password("1234")
 
-        val article = Article.of(
+        val article = Article(
             title = "Test Title",
             content = "Test Content",
-            password = "1234"
+            createdBy = "user1"
         )
 
         `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
+        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user1", nickname = "nickname", role = ROLE.USER, password = "password"))
 
-        //when
-        articleService.deleteArticle(id, password)
+        // when
+        articleService.deleteArticle(id)
 
-        //then
+        // then
         verify(articleRepository).deleteById(id)
     }
 
     @Test
-    fun `게시글 삭제 실패 테스트`() {
+    fun `게시글 삭제 실패 테스트 - 권한 없음`() {
         // given
         val id = 1L
-        val password = ArticleDto.Password("1111")
 
-        val article = Article.of(
+        val article = Article(
             title = "Test Title",
             content = "Test Content",
-            password = "1234"
+            createdBy = "user1"
         )
 
         `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
+        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when, then
-        assertThrows<IllegalArgumentException> {
-            articleService.deleteArticle(id, password)
+        assertThrows<UserNotAuthorizedException> {
+            articleService.deleteArticle(id)
         }
     }
 }

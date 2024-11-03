@@ -11,8 +11,8 @@ class ArticleDto {
         val content: String
     ): Serializable {
         fun toArticle() = Article(
-            title=title,
-            content=content
+            title = title,
+            content = content
         )
     }
 
