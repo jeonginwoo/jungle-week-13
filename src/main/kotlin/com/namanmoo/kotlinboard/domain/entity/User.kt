@@ -1,6 +1,7 @@
 package com.namanmoo.kotlinboard.domain.entity
 
 import com.namanmoo.kotlinboard.common.status.ROLE
+import com.namanmoo.kotlinboard.domain.BaseEntity
 import com.namanmoo.kotlinboard.service.dto.UserDto
 import jakarta.persistence.*
 

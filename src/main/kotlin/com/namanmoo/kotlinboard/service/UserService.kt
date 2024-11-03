@@ -10,7 +10,6 @@ import com.namanmoo.kotlinboard.service.dto.UserDto
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.NoSuchElementException
@@ -32,8 +31,8 @@ class UserService(
             .orElseThrow{ NoSuchElementException("사용자($userName)를 찾을 수 없습니다.") }
     }
 
-    fun findUser(userName: String): UserDto.Response {
-        val user = findById(userName)
+    fun findUser(): UserDto.Response {
+        val user = findById(getCurrentUsername())
         return UserDto.Response.toResponse(user)
     }
 
@@ -56,18 +55,15 @@ class UserService(
     }
 
     @Transactional
-    fun updateUser(userRequest: UserDto.Request, userName: String): UserDto.Response {
-        val user = findById(userName)
+    fun updateUser(userRequest: UserDto.Request): UserDto.Response {
+        val user = findById(getCurrentUsername())
         user.updateUser(userRequest)
         return UserDto.Response.toResponse(user)
     }
 
-    fun deleteUser(userName: String): Map<String, String> {
-        userRepository.deleteById(userName)
-        return mapOf(
-            "message" to "회원 정보 삭제 성공",
-            "userName" to userName
-        )
+    fun deleteUser(): String {
+        userRepository.deleteById(getCurrentUsername())
+        return "회원 정보 삭제 성공"
     }
 
 //    fun getCurrentUsername(): String {
@@ -83,5 +79,9 @@ class UserService(
             is String -> principal // principal이 String일 경우 그대로 반환
             else -> throw RuntimeException("User not authenticated or principal is not a recognized type")
         }
+    }
+
+    fun getCurrentUser(): User {
+        return findById(getCurrentUsername())
     }
 }

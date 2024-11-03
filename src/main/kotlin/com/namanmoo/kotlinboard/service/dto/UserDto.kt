@@ -40,10 +40,10 @@ class UserDto {
             get() = _password!!
 
         fun toUser() = User(
-            userName=userName,
-            nickname=nickname,
-            role=ROLE.MEMBER,
-            password=password
+            userName = userName,
+            nickname = nickname,
+            role = ROLE.USER,
+            password = password
         )
     }
 
@@ -57,12 +57,12 @@ class UserDto {
     ): Serializable {
         companion object {
             fun toResponse(user: User) = Response(
-                userName=user.userName,
-                nickname=user.nickname,
-                userRole=user.role.toString(),
-                password=user.password,
-                createdAt=user.createdAt,
-                modifiedAt=user.modifiedAt
+                userName = user.userName,
+                nickname = user.nickname,
+                userRole = user.role.toString(),
+                password = user.password,
+                createdAt = user.createdAt,
+                modifiedAt = user.modifiedAt
             )
         }
     }

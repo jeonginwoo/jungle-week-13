@@ -1,20 +1,23 @@
 package com.namanmoo.kotlinboard.controller
 
-import com.namanmoo.kotlinboard.common.dto.BaseResponse
 import com.namanmoo.kotlinboard.common.autority.TokenInfo
-import com.namanmoo.kotlinboard.common.dto.CustomUser
+import com.namanmoo.kotlinboard.common.dto.BaseResponse
+import com.namanmoo.kotlinboard.service.ArticleService
+import com.namanmoo.kotlinboard.service.CommentService
 import com.namanmoo.kotlinboard.service.UserService
+import com.namanmoo.kotlinboard.service.dto.ArticleDto
+import com.namanmoo.kotlinboard.service.dto.CommentDto
 import com.namanmoo.kotlinboard.service.dto.UserDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/user")
 @RestController
 class UserController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val articleService: ArticleService,
+    private val commentService: CommentService
 ) {
 
     @GetMapping("/all-user")
@@ -25,8 +28,19 @@ class UserController(
 
     @GetMapping("/my-info")
     fun myInfo(): ResponseEntity<UserDto.Response> {
-        val userName = userService.getCurrentUsername()
-        val response = userService.findUser(userName)
+        val response = userService.findUser()
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/articles")
+    fun userArticles(): ResponseEntity<List<ArticleDto.Response>> {
+        val response = articleService.findArticlesInUser()
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/comments")
+    fun userComments(): ResponseEntity<List<CommentDto.Response>> {
+        val response = commentService.findCommentsInUser()
         return ResponseEntity.ok(response)
     }
 
@@ -35,7 +49,7 @@ class UserController(
         @RequestBody @Valid userRequest: UserDto.Login
     ): BaseResponse<TokenInfo> {
         val response = userService.login(userRequest)
-        return BaseResponse(data=response)
+        return BaseResponse(data = response)
     }
 
     @PostMapping("/sign-up")
@@ -43,23 +57,20 @@ class UserController(
         @RequestBody @Valid userRequest: UserDto.Request
     ): BaseResponse<String> {
         val response = userService.signUp(userRequest)
-        return BaseResponse(message=response)
+        return BaseResponse(message = response)
     }
 
-    @PutMapping("/{user-name}")
+    @PutMapping("/")
     fun updateUser(
         @RequestBody @Valid userRequest: UserDto.Request,
-        @PathVariable("user-name") userName: String
     ): BaseResponse<UserDto.Response> {
-        val response = userService.updateUser(userRequest, userName)
-        return BaseResponse(data=response)
+        val response = userService.updateUser(userRequest)
+        return BaseResponse(data = response)
     }
 
-    @DeleteMapping("/{user-name}")
-    fun deleteUser(
-        @PathVariable("user-name") userName: String
-    ): BaseResponse<Map<String, Any>> {
-        val response = userService.deleteUser(userName)
-        return BaseResponse(data=response)
+    @DeleteMapping("/withdrawal")
+    fun deleteUser(): BaseResponse<String> {
+        val response = userService.deleteUser()
+        return BaseResponse(message = response)
     }
 }

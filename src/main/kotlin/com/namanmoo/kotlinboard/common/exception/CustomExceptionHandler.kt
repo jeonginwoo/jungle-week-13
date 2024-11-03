@@ -31,6 +31,12 @@ class CustomExceptionHandler {
         return ResponseEntity(BaseResponse(ResultCode.ERROR.name, errors, ResultCode.ERROR.msg), HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(UserNotAuthorizedException::class)
+    protected fun userNotAuthorizedException(ex: UserNotAuthorizedException): ResponseEntity<BaseResponse<Map<String, String>>> {
+        val errors = mapOf("유저 권한 없음" to (ex.message ?: "Not Exception Message"))
+        return ResponseEntity(BaseResponse(ResultCode.ERROR.name, errors, ResultCode.ERROR.msg), HttpStatus.BAD_REQUEST)
+    }
+
     @ExceptionHandler(BadCredentialsException::class)
     protected fun badCredentialsException(ex: BadCredentialsException): ResponseEntity<BaseResponse<Map<String, String>>> {
         val errors = mapOf("로그인 실패" to "아이디 혹은 비밀번호를 다시 확인하세요")
