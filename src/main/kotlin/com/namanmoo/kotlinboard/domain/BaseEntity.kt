@@ -1,4 +1,4 @@
-package com.namanmoo.kotlinboard.domain.entity
+package com.namanmoo.kotlinboard.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

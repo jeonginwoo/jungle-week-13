@@ -4,6 +4,7 @@ import com.namanmoo.kotlinboard.common.autority.JwtAuthenticationFilter
 import com.namanmoo.kotlinboard.common.autority.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -25,9 +26,17 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)} // 세션을 사용하지 않도록 설정 (JWT로 인증하기 때문)
             .authorizeHttpRequests {        // 요청 URL별 권한 설정
                 it
-                    .requestMatchers("/api/user/sign-up", "/api/user/login").anonymous() // 회원가입 요청은 인증 없이 접근 허용
-                    .requestMatchers("/api/user/**").hasRole("MEMBER")
-                    .anyRequest().permitAll()   // 그 외의 모든 요청은 인증 없이 접근 허용
+                    /* user */
+                    .requestMatchers("/api/user/sign-up", "/api/user/login").anonymous()
+                    .requestMatchers("/api/user/all-user").hasRole("ADMIN")
+                    .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+
+                    /* article */
+                    .requestMatchers(HttpMethod.POST, "/api/articles/new-article").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/articles/{article-id}").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/articles/{article-id}").hasAnyRole("USER", "ADMIN")
+
+                    .anyRequest().permitAll()   // 나머지 모든 요청은 인증 없이 접근 허용
             }
             .addFilterBefore(               // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
                 JwtAuthenticationFilter(jwtTokenProvider),

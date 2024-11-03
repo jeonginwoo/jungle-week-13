@@ -7,5 +7,5 @@ enum class ResultCode(val msg: String) {
 
 enum class ROLE {
     ADMIN,
-    MEMBER
+    USER
 }
