@@ -35,18 +35,12 @@ class ArticleService(
     @Transactional
     fun updateArticle(articleRequest: ArticleDto.Request, articleId: Long): ArticleDto.Response {
         val article = findById(articleId)
-        if (!article.checkPassword(articleRequest.password)) {
-            throw IllegalArgumentException("패스워드가 일치하지 않습니다.")
-        }
         article.updateArticle(articleRequest)
         return ArticleDto.Response.toResponse(article)
     }
 
-    fun deleteArticle(articleId: Long, password: ArticleDto.Password): Map<String, Any> {
+    fun deleteArticle(articleId: Long): Map<String, Any> {
         val article = findById(articleId)
-        if (!article.checkPassword(password.password)) {
-            throw IllegalArgumentException("패스워드가 일치하지 않습니다.")
-        }
         articleRepository.deleteById(articleId)
         return mapOf(
             "message" to "삭제 성공",

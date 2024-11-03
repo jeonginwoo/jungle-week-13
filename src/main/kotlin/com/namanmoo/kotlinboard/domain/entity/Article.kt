@@ -1,5 +1,6 @@
 package com.namanmoo.kotlinboard.domain.entity
 
+import com.namanmoo.kotlinboard.domain.BaseEntity
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedBy
@@ -24,19 +25,16 @@ class Article(
     @Column(nullable = false, length = 10000)
     var content: String,
 
-    @Column(nullable = false)
-    var password: String,
-
     @CreatedBy
     @Column(nullable = false)
     var createdBy: String = ""
 ) : BaseEntity() {
 
-    companion object {
-        fun of(title: String, content: String, password: String): Article = Article(title=title, content=content, password=password)
-    }
-
-    protected constructor() : this(title="", content="", password="") // JPA 기본 생성자
+//    companion object {
+//        fun of(title: String, content: String, password: String): Article = Article(title=title, content=content, password=password)
+//    }
+//
+//    protected constructor() : this(title="", content="", password="") // JPA 기본 생성자
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -47,12 +45,9 @@ class Article(
     override fun hashCode(): Int {
         var result = title.hashCode()
         result = 31 * result + content.hashCode()
-        result = 31 * result + password.hashCode()
         result = 31 * result + (id.hashCode() ?: 0)
         return result
     }
-
-    fun checkPassword(password: String): Boolean = this.password == password
 
     fun updateArticle(articleRequest: ArticleDto.Request) {
         this.title = articleRequest.title

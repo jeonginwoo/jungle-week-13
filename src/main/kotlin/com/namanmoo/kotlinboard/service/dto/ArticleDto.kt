@@ -8,13 +8,11 @@ class ArticleDto {
 
     data class Request(
         val title: String,
-        val content: String,
-        val password: String
+        val content: String
     ): Serializable {
         fun toArticle() = Article(
             title=title,
-            content=content,
-            password=password
+            content=content
         )
     }
 
@@ -28,12 +26,14 @@ class ArticleDto {
     ): Serializable {
         companion object {
             fun toResponse(article: Article): Response {
-                return Response(article.id, article.title, article.content, article.createdBy, article.createdAt, article.modifiedAt)
+                return Response(
+                    article.id,
+                    article.title,
+                    article.content,
+                    article.createdBy,
+                    article.createdAt,
+                    article.modifiedAt)
             }
         }
     }
-
-    data class Password(
-        val password: String
-    ): Serializable
 }

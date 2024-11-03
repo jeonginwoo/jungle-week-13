@@ -44,10 +44,9 @@ class ArticleController(
 
     @DeleteMapping("/{article-id}")
     fun deleteArticle(
-        @RequestBody password: ArticleDto.Password,
         @PathVariable("article-id") articleId: Long
     ): ResponseEntity<Map<String, Any>> {
-        val response = articleService.deleteArticle(articleId, password)
+        val response = articleService.deleteArticle(articleId)
         return ResponseEntity.ok(response)
     }
 }
