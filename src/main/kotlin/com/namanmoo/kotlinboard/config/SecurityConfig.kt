@@ -31,10 +31,10 @@ class SecurityConfig(
                     .requestMatchers("/api/user/all-user").hasRole("ADMIN")
                     .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
 
-                    /* article */
-                    .requestMatchers(HttpMethod.POST, "/api/articles/new-article").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/api/articles/{article-id}").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/api/articles/{article-id}").hasAnyRole("USER", "ADMIN")
+                    /* article, comment */
+                    .requestMatchers(HttpMethod.POST, "/api/articles/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/articles/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/articles/**").hasAnyRole("USER", "ADMIN")
 
                     .anyRequest().permitAll()   // 나머지 모든 요청은 인증 없이 접근 허용
             }
