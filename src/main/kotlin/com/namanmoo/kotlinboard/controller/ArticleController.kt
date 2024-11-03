@@ -1,5 +1,6 @@
 package com.namanmoo.kotlinboard.controller
 
+import com.namanmoo.kotlinboard.common.dto.BaseResponse
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.service.ArticleService
 import org.springframework.http.ResponseEntity
@@ -20,9 +21,9 @@ class ArticleController(
     @PostMapping("/new-article")
     fun createArticle(
         @RequestBody articleRequest: ArticleDto.Request
-    ): ResponseEntity<ArticleDto.Response> {
+    ): BaseResponse<ArticleDto.Response> {
         val response = articleService.createArticle(articleRequest)
-        return ResponseEntity.ok(response)
+        return BaseResponse(data=response)
     }
 
     @GetMapping("/{article-id}")
@@ -37,16 +38,16 @@ class ArticleController(
     fun updateArticle(
         @RequestBody articleRequest: ArticleDto.Request,
         @PathVariable("article-id") articleId: Long
-    ): ResponseEntity<ArticleDto.Response> {
+    ): BaseResponse<ArticleDto.Response> {
         val response = articleService.updateArticle(articleRequest, articleId)
-        return ResponseEntity.ok(response)
+        return BaseResponse(data=response)
     }
 
     @DeleteMapping("/{article-id}")
     fun deleteArticle(
         @PathVariable("article-id") articleId: Long
-    ): ResponseEntity<Map<String, Any>> {
+    ): BaseResponse<String> {
         val response = articleService.deleteArticle(articleId)
-        return ResponseEntity.ok(response)
+        return BaseResponse(message=response)
     }
 }

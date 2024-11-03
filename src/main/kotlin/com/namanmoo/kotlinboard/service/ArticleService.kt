@@ -39,12 +39,9 @@ class ArticleService(
         return ArticleDto.Response.toResponse(article)
     }
 
-    fun deleteArticle(articleId: Long): Map<String, Any> {
+    fun deleteArticle(articleId: Long): String {
         val article = findById(articleId)
         articleRepository.deleteById(articleId)
-        return mapOf(
-            "message" to "삭제 성공",
-            "deletedArticleId" to articleId
-        )
+        return "삭제 성공"
     }
 }
