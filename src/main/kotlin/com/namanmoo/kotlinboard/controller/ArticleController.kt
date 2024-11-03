@@ -3,6 +3,7 @@ package com.namanmoo.kotlinboard.controller
 import com.namanmoo.kotlinboard.common.dto.BaseResponse
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.service.ArticleService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -23,7 +24,7 @@ class ArticleController(
         @RequestBody articleRequest: ArticleDto.Request
     ): BaseResponse<ArticleDto.Response> {
         val response = articleService.createArticle(articleRequest)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @GetMapping("/{article-id}")
@@ -40,14 +41,14 @@ class ArticleController(
         @PathVariable("article-id") articleId: Long
     ): BaseResponse<ArticleDto.Response> {
         val response = articleService.updateArticle(articleRequest, articleId)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @DeleteMapping("/{article-id}")
     fun deleteArticle(
         @PathVariable("article-id") articleId: Long
-    ): BaseResponse<String> {
+    ): BaseResponse<String>{
         val response = articleService.deleteArticle(articleId)
-        return BaseResponse(message = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), message = response)
     }
 }

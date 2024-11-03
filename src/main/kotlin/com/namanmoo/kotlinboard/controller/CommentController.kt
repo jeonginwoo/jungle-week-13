@@ -3,6 +3,7 @@ package com.namanmoo.kotlinboard.controller
 import com.namanmoo.kotlinboard.common.dto.BaseResponse
 import com.namanmoo.kotlinboard.service.CommentService
 import com.namanmoo.kotlinboard.service.dto.CommentDto
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/articles/{article-id}/comments")
@@ -17,7 +18,7 @@ class CommentController(
         @RequestBody commentRequest: CommentDto.Request
     ): BaseResponse<CommentDto.Response> {
         val response = commentService.createComment(articleId, commentRequest)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @GetMapping("")
@@ -25,7 +26,7 @@ class CommentController(
         @PathVariable("article-id") articleId: Long
     ): BaseResponse<List<CommentDto.Response>> {
         val response = commentService.findCommentsInArticle(articleId)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @PutMapping("/{comment-id}")
@@ -34,7 +35,7 @@ class CommentController(
         @RequestBody commentRequest: CommentDto.Request
     ): BaseResponse<CommentDto.Response> {
         val response = commentService.updateComment(commentId, commentRequest)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @DeleteMapping("/{comment-id}")
@@ -42,6 +43,6 @@ class CommentController(
         @PathVariable("comment-id") commentId: Long
     ): BaseResponse<String> {
         val response = commentService.deleteComment(commentId)
-        return BaseResponse(message = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), message = response)
     }
 }

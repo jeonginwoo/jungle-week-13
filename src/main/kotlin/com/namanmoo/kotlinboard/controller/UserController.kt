@@ -9,6 +9,7 @@ import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.service.dto.CommentDto
 import com.namanmoo.kotlinboard.service.dto.UserDto
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -49,7 +50,7 @@ class UserController(
         @RequestBody @Valid userRequest: UserDto.Login
     ): BaseResponse<TokenInfo> {
         val response = userService.login(userRequest)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @PostMapping("/sign-up")
@@ -57,20 +58,20 @@ class UserController(
         @RequestBody @Valid userRequest: UserDto.Request
     ): BaseResponse<String> {
         val response = userService.signUp(userRequest)
-        return BaseResponse(message = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), message = response)
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     fun updateUser(
         @RequestBody @Valid userRequest: UserDto.Request,
     ): BaseResponse<UserDto.Response> {
         val response = userService.updateUser(userRequest)
-        return BaseResponse(data = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
     }
 
     @DeleteMapping("/withdrawal")
     fun deleteUser(): BaseResponse<String> {
         val response = userService.deleteUser()
-        return BaseResponse(message = response)
+        return BaseResponse(statusCode = HttpStatus.OK.toString(), message = response)
     }
 }
