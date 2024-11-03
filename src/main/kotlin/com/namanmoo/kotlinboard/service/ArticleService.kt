@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.service
 
-import com.namanmoo.kotlinboard.common.exception.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
 import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
@@ -34,7 +34,7 @@ class ArticleService(
 
     fun findById(id: Long): Article {
         return articleRepository.findById(id)
-            .orElseThrow{NoSuchElementException("게시글(id: $id)을 찾을 수 없습니다.")}
+            .orElseThrow{ NoSuchElementException("게시글(id: $id)을 찾을 수 없습니다.") }
     }
 
     fun findArticle(id: Long): ArticleDto.Response {
@@ -66,7 +66,7 @@ class ArticleService(
     fun validateUser(article: Article) {
         val user = userService.getCurrentUser()
         if (user.role != ROLE.ADMIN && user.userName != article.createdBy) {
-            throw UserNotAuthorizedException("사용자가 이 게시글을 수정하거나 삭제할 권한이 없습니다.")
+            throw UserNotAuthorizedException("작성자만 삭제/수정할 수 있습니다.")
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.service
 
-import com.namanmoo.kotlinboard.common.exception.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
 import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.domain.entity.User
@@ -17,12 +17,14 @@ class ArticleServiceTest {
     private lateinit var articleService: ArticleService
     private lateinit var articleRepository: ArticleRepository
     private lateinit var userService: UserService
+    private lateinit var commentService: CommentService
 
     @BeforeEach
     fun setUp() {
         articleRepository = mock(ArticleRepository::class.java)
         userService = mock(UserService::class.java)
-        articleService = ArticleService(articleRepository, userService)
+        commentService = mock(CommentService::class.java)
+        articleService = ArticleService(articleRepository, userService, commentService)
     }
 
     @Test

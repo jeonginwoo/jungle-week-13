@@ -3,7 +3,7 @@ package com.namanmoo.kotlinboard.service
 import com.namanmoo.kotlinboard.common.autority.JwtTokenProvider
 import com.namanmoo.kotlinboard.common.autority.TokenInfo
 import com.namanmoo.kotlinboard.common.dto.CustomUser
-import com.namanmoo.kotlinboard.common.exception.InvalidInputException
+import com.namanmoo.kotlinboard.common.exception.custom.InvalidInputException
 import com.namanmoo.kotlinboard.domain.entity.User
 import com.namanmoo.kotlinboard.repository.UserRepository
 import com.namanmoo.kotlinboard.service.dto.UserDto
@@ -38,7 +38,7 @@ class UserService(
 
     fun signUp(userRequest: UserDto.Request): String {
         if (userRepository.existsById(userRequest.userName)) {
-            throw InvalidInputException("(${userRequest.userName}) 이미 존재하는 사용자 이름입니다.")
+            throw InvalidInputException(message = "중복된 username 입니다.")
         }
 
         val user = userRequest.toUser()

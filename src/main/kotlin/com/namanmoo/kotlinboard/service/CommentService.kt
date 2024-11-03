@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.service
 
-import com.namanmoo.kotlinboard.common.exception.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
 import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Comment
 import com.namanmoo.kotlinboard.domain.entity.User
@@ -19,7 +19,7 @@ class CommentService(
 ) {
 
     fun createComment(articleId: Long, commentRequest: CommentDto.Request): CommentDto.Response {
-        val article = articleRepository.findById(articleId).orElseThrow{NoSuchElementException("게시글(id: $articleId)을 찾을 수 없습니다.")}
+        val article = articleRepository.findById(articleId).orElseThrow{ NoSuchElementException("게시글(id: $articleId)을 찾을 수 없습니다.") }
         val comment = commentRepository.save(commentRequest.toComment(article))
         return CommentDto.Response.toResponse(comment)
     }
@@ -74,7 +74,7 @@ class CommentService(
     fun validateAndGetUser(comment: Comment): User {
         val user = userService.getCurrentUser()
         if (user.role != ROLE.ADMIN && user.userName != comment.createdBy) {
-            throw UserNotAuthorizedException("사용자가 이 댓글을 수정하거나 삭제할 권한이 없습니다.")
+            throw UserNotAuthorizedException("작성자만 삭제/수정할 수 있습니다.")
         }
         return user
     }
