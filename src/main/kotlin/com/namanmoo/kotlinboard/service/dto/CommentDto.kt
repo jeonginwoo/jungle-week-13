@@ -20,19 +20,39 @@ class CommentDto {
         val commentId: Long,
         val content: String,
         val createdBy: String,
-        val nickname: String,
         val createdAt: LocalDateTime,
-        val modifiedAt: LocalDateTime
+        val modifiedAt: LocalDateTime,
     ): Serializable {
         companion object {
-            fun toResponse(comment: Comment, user: User): Response {
+            fun toResponse(comment: Comment): Response {
                 return Response(
                     commentId = comment.id,
                     content = comment.content,
                     createdBy = comment.createdBy,
-                    nickname = user.nickname,
                     createdAt = comment.createdAt,
                     modifiedAt = comment.modifiedAt
+                )
+            }
+        }
+    }
+
+    data class ResponseWithComments(
+        val commentId: Long,
+        val content: String,
+        val createdBy: String,
+        val createdAt: LocalDateTime,
+        val modifiedAt: LocalDateTime,
+        val comments: List<ResponseWithComments>
+    ): Serializable {
+        companion object {
+            fun toResponse(comment: Comment, comments: List<ResponseWithComments>): ResponseWithComments {
+                return ResponseWithComments(
+                    commentId = comment.id,
+                    content = comment.content,
+                    createdBy = comment.createdBy,
+                    createdAt = comment.createdAt,
+                    modifiedAt = comment.modifiedAt,
+                    comments = comments
                 )
             }
         }

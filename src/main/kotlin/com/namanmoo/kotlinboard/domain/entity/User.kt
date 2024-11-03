@@ -23,8 +23,6 @@ class User(
     var password: String,
 ): BaseEntity() {
 
-    fun checkPassword(password: String) = this.password == password
-
     fun updateUser(userRequest: UserDto.Request) {
         this.nickname = userRequest.nickname
         this.password = userRequest.password

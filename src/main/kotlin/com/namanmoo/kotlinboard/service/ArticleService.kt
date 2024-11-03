@@ -12,7 +12,8 @@ import java.util.NoSuchElementException
 @Service
 class ArticleService(
     private val articleRepository: ArticleRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val commentService: CommentService
 ) {
 
     fun createArticle(articleRequest: ArticleDto.Request): ArticleDto.Response {
@@ -38,6 +39,13 @@ class ArticleService(
 
     fun findArticle(id: Long): ArticleDto.Response {
         return ArticleDto.Response.toResponse(findById(id))
+    }
+
+    // 게시글과 그 게시글의 댓글 및 대댓글을 포함한 정보 반환
+    fun findArticleWithComments(id: Long): ArticleDto.ResponseWithComments {
+        val article = findById(id)
+        val comments = commentService.findAllCommentsInArticle(id)
+        return ArticleDto.ResponseWithComments.toResponse(article, comments)
     }
 
     @Transactional

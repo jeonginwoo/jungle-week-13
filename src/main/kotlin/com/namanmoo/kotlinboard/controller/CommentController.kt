@@ -4,6 +4,7 @@ import com.namanmoo.kotlinboard.common.dto.BaseResponse
 import com.namanmoo.kotlinboard.service.CommentService
 import com.namanmoo.kotlinboard.service.dto.CommentDto
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/articles/{article-id}/comments")
@@ -22,11 +23,19 @@ class CommentController(
     }
 
     @GetMapping("")
-    fun getComments(
+    fun getCommentsAboutArticle(
         @PathVariable("article-id") articleId: Long
-    ): BaseResponse<List<CommentDto.Response>> {
+    ): ResponseEntity<List<CommentDto.Response>> {
         val response = commentService.findCommentsInArticle(articleId)
-        return BaseResponse(statusCode = HttpStatus.OK.toString(), data = response)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/{comment-id}")
+    fun getCommentsAboutParentComment(
+        @PathVariable("comment-id") commentId: Long
+    ): ResponseEntity<List<CommentDto.Response>> {
+        val response = commentService.findCommentsInParentComment(commentId)
+        return ResponseEntity.ok(response)
     }
 
     @PutMapping("/{comment-id}")

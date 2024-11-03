@@ -35,6 +35,14 @@ class ArticleController(
         return ResponseEntity.ok(response)
     }
 
+    @GetMapping("/{article-id}/with-comments")
+    fun getArticleWithComments(
+        @PathVariable("article-id") articleId: Long
+    ): ResponseEntity<ArticleDto.ResponseWithComments> {
+        val response = articleService.findArticleWithComments(articleId)
+        return ResponseEntity.ok(response)
+    }
+
     @PutMapping("/{article-id}")
     fun updateArticle(
         @RequestBody articleRequest: ArticleDto.Request,
