@@ -2,23 +2,24 @@ package com.namanmoo.kotlinboard.service
 
 import com.namanmoo.kotlinboard.common.autority.JwtTokenProvider
 import com.namanmoo.kotlinboard.common.autority.TokenInfo
-import com.namanmoo.kotlinboard.common.dto.CustomUser
 import com.namanmoo.kotlinboard.common.exception.custom.InvalidInputException
+import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import com.namanmoo.kotlinboard.domain.entity.User
 import com.namanmoo.kotlinboard.repository.UserRepository
 import com.namanmoo.kotlinboard.service.dto.UserDto
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.NoSuchElementException
+
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val authorizeUserService: AuthorizeUserService
 ) {
 
     fun findAllUser(): List<UserDto.Response> {
@@ -32,7 +33,7 @@ class UserService(
     }
 
     fun findUser(): UserDto.Response {
-        val user = findById(getCurrentUsername())
+        val user = findById(authorizeUserService.getCurrentUsername())
         return UserDto.Response.toResponse(user)
     }
 
@@ -56,32 +57,13 @@ class UserService(
 
     @Transactional
     fun updateUser(userRequest: UserDto.Request): UserDto.Response {
-        val user = findById(getCurrentUsername())
+        val user = findById(authorizeUserService.getCurrentUsername())
         user.updateUser(userRequest)
         return UserDto.Response.toResponse(user)
     }
 
     fun deleteUser(): String {
-        userRepository.deleteById(getCurrentUsername())
+        userRepository.deleteById(authorizeUserService.getCurrentUsername())
         return "회원 정보 삭제 성공"
-    }
-
-//    fun getCurrentUsername(): String {
-//        val userName = (SecurityContextHolder.getContext().authentication.principal as CustomUser).username
-//        return userName
-//    }
-
-    fun getCurrentUsername(): String {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val principal = authentication?.principal
-        return when (principal) {
-            is CustomUser -> principal.username
-            is String -> principal // principal이 String일 경우 그대로 반환
-            else -> throw RuntimeException("User not authenticated or principal is not a recognized type")
-        }
-    }
-
-    fun getCurrentUser(): User {
-        return findById(getCurrentUsername())
     }
 }

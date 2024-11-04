@@ -28,18 +28,3 @@ class User(
         this.password = userRequest.password
     }
 }
-//
-//@Entity
-//class UserRole(
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    val id: Long? = null,
-//
-//    @Column(nullable = false, length = 30)
-//    @Enumerated(EnumType.STRING)
-//    val role: ROLE,
-//
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(foreignKey = ForeignKey(name = "fk_user_role_user_id"))
-//    val user: User
-//)

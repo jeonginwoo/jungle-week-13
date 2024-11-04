@@ -1,10 +1,14 @@
 package com.namanmoo.kotlinboard.service
 
 import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
+import com.namanmoo.kotlinboard.domain.entity.Comment
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import com.namanmoo.kotlinboard.repository.ArticleRepository
+import com.namanmoo.kotlinboard.repository.CommentRepository
+import com.namanmoo.kotlinboard.service.dto.CommentDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.NoSuchElementException
@@ -12,8 +16,8 @@ import java.util.NoSuchElementException
 @Service
 class ArticleService(
     private val articleRepository: ArticleRepository,
-    private val userService: UserService,
-    private val commentService: CommentService
+    private val commentRepository: CommentRepository,
+    private val authorizeUserService: AuthorizeUserService
 ) {
 
     fun createArticle(articleRequest: ArticleDto.Request): ArticleDto.Response {
@@ -27,7 +31,7 @@ class ArticleService(
     }
 
     fun findArticlesInUser(): List<ArticleDto.Response> {
-        val user = userService.getCurrentUser()
+        val user = authorizeUserService.getCurrentUser()
         val articleList = articleRepository.findAllByCreatedByOrderByCreatedAtDesc(user.userName)
         return articleList.map{ ArticleDto.Response.toResponse(it)}
     }
@@ -44,29 +48,31 @@ class ArticleService(
     // 게시글과 그 게시글의 댓글 및 대댓글을 포함한 정보 반환
     fun findArticleWithComments(id: Long): ArticleDto.ResponseWithComments {
         val article = findById(id)
-        val comments = commentService.findAllCommentsInArticle(id)
+        val comments = findAllCommentsInArticle(id)
         return ArticleDto.ResponseWithComments.toResponse(article, comments)
+
+    } private fun findAllCommentsInArticle(articleId: Long): List<CommentDto.ResponseWithComments> {
+        val topLevelComments = commentRepository.findAllByArticleIdAndParentCommentIdIsNull(articleId)
+        return topLevelComments.map { buildCommentWithReplies(it) }
+
+    } private fun buildCommentWithReplies(comment: Comment): CommentDto.ResponseWithComments {
+        val replies = commentRepository.findAllByParentCommentId(comment.id)
+        val replyDtos = replies.map { buildCommentWithReplies(it) }
+        return CommentDto.ResponseWithComments.toResponse(comment, replyDtos)
     }
 
     @Transactional
     fun updateArticle(articleRequest: ArticleDto.Request, articleId: Long): ArticleDto.Response {
         val article = findById(articleId)
-        validateUser(article)
+        authorizeUserService.validateUser(article)
         article.updateArticle(articleRequest)
         return ArticleDto.Response.toResponse(article)
     }
 
     fun deleteArticle(articleId: Long): String {
         val article = findById(articleId)
-        validateUser(article)
+        authorizeUserService.validateUser(article)
         articleRepository.deleteById(articleId)
         return "삭제 성공"
-    }
-
-    fun validateUser(article: Article) {
-        val user = userService.getCurrentUser()
-        if (user.role != ROLE.ADMIN && user.userName != article.createdBy) {
-            throw UserNotAuthorizedException("작성자만 삭제/수정할 수 있습니다.")
-        }
     }
 }

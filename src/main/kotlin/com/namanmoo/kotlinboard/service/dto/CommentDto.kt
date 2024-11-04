@@ -2,7 +2,6 @@ package com.namanmoo.kotlinboard.service.dto
 
 import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.domain.entity.Comment
-import com.namanmoo.kotlinboard.domain.entity.User
 import java.io.Serializable
 import java.time.LocalDateTime
 

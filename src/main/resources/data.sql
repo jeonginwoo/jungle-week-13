@@ -1,10 +1,10 @@
-INSERT INTO users (user_name, nickname, role, password, created_at, modified_at)
+INSERT INTO users (user_name, nickname, role, password, created_by, created_at, modified_at)
 VALUES
-    ('admin0', 'admin', 'ADMIN', 'Zz12341234', now(), now()),
-    ('user1', 'aaa', 'USER', 'Aa12341234', now(), now()),
-    ('user2', 'bbb', 'USER', 'Bb12341234', now(), now()),
-    ('user3', 'ccc', 'USER', 'Cc12341234', now(), now()),
-    ('user4', 'ddd', 'USER', 'Dd12341234', now(), now());
+    ('admin0', 'admin', 'ADMIN', 'Zz12341234', "", now(), now()),
+    ('user1', 'aaa', 'USER', 'Aa12341234', "", now(), now()),
+    ('user2', 'bbb', 'USER', 'Bb12341234', "", now(), now()),
+    ('user3', 'ccc', 'USER', 'Cc12341234', "", now(), now()),
+    ('user4', 'ddd', 'USER', 'Dd12341234', "", now(), now());
 
 INSERT INTO article (title, content, created_by, created_at, modified_at)
 VALUES

@@ -23,31 +23,8 @@ class Article(
     var title: String,
 
     @Column(nullable = false, length = 10000)
-    var content: String,
-
-    @CreatedBy
-    @Column(nullable = false)
-    var createdBy: String = ""
+    var content: String
 ) : BaseEntity() {
-
-//    companion object {
-//        fun of(title: String, content: String, password: String): Article = Article(title=title, content=content, password=password)
-//    }
-//
-//    protected constructor() : this(title="", content="", password="") // JPA 기본 생성자
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Article) return false
-        return id == other.id
-    }
-
-    override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + content.hashCode()
-        result = 31 * result + (id.hashCode() ?: 0)
-        return result
-    }
 
     fun updateArticle(articleRequest: ArticleDto.Request) {
         this.title = articleRequest.title

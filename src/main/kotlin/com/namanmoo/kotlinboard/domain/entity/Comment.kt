@@ -19,11 +19,7 @@ class Comment(
     var articleId: Long,
 
     @Column
-    var parentCommentId: Long? = null,
-
-    @CreatedBy
-    @Column(nullable = false)
-    var createdBy: String = ""
+    var parentCommentId: Long? = null
 ): BaseEntity() {
 
     fun updateComment(commentRequest: CommentDto.Request) {

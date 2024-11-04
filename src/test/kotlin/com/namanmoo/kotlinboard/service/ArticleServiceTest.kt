@@ -1,10 +1,12 @@
 package com.namanmoo.kotlinboard.service
 
 import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.domain.entity.User
 import com.namanmoo.kotlinboard.repository.ArticleRepository
+import com.namanmoo.kotlinboard.repository.CommentRepository
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -16,15 +18,15 @@ import java.util.*
 class ArticleServiceTest {
     private lateinit var articleService: ArticleService
     private lateinit var articleRepository: ArticleRepository
-    private lateinit var userService: UserService
-    private lateinit var commentService: CommentService
+    private lateinit var commentRepository: CommentRepository
+    private lateinit var authorizeUserService: AuthorizeUserService
 
     @BeforeEach
     fun setUp() {
         articleRepository = mock(ArticleRepository::class.java)
-        userService = mock(UserService::class.java)
-        commentService = mock(CommentService::class.java)
-        articleService = ArticleService(articleRepository, userService, commentService)
+        commentRepository = mock(CommentRepository::class.java)
+        authorizeUserService = mock(AuthorizeUserService::class.java)
+        articleService = ArticleService(articleRepository, commentRepository, authorizeUserService)
     }
 
     @Test
@@ -102,12 +104,12 @@ class ArticleServiceTest {
 
         val article = Article(
             title = "Test Title",
-            content = "Test Content",
-            createdBy = "user1"
+            content = "Test Content"
         )
+        article.createdBy = "user1"
 
         `when`(articleRepository.findById(articleId)).thenReturn(Optional.of(article))
-        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user1", nickname = "nickname", role = ROLE.USER, password = "password"))
+        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user1", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when
         val response = articleService.updateArticle(articleRequest, articleId)
@@ -119,7 +121,7 @@ class ArticleServiceTest {
     }
 
     @Test
-    fun `게시글 수정 실패 테스트 - 권한 없음`() {
+    fun `게시글 수정 실패 테스트`() {
         // given
         val articleRequest = ArticleDto.Request(
             title = "Update Title",
@@ -129,12 +131,12 @@ class ArticleServiceTest {
 
         val article = Article(
             title = "Test Title",
-            content = "Test Content",
-            createdBy = "user1"
+            content = "Test Content"
         )
+        article.createdBy = "user1"
 
         `when`(articleRepository.findById(articleId)).thenReturn(Optional.of(article))
-        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
+        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when, then
         assertThrows<UserNotAuthorizedException> {
@@ -149,12 +151,12 @@ class ArticleServiceTest {
 
         val article = Article(
             title = "Test Title",
-            content = "Test Content",
-            createdBy = "user1"
+            content = "Test Content"
         )
+        article.createdBy = "user1"
 
         `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
-        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user1", nickname = "nickname", role = ROLE.USER, password = "password"))
+        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user1", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when
         articleService.deleteArticle(id)
@@ -164,18 +166,18 @@ class ArticleServiceTest {
     }
 
     @Test
-    fun `게시글 삭제 실패 테스트 - 권한 없음`() {
+    fun `게시글 삭제 실패 테스트`() {
         // given
         val id = 1L
 
         val article = Article(
             title = "Test Title",
             content = "Test Content",
-            createdBy = "user1"
         )
+        article.createdBy = "user1"
 
         `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
-        `when`(userService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
+        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
 
         // when, then
         assertThrows<UserNotAuthorizedException> {

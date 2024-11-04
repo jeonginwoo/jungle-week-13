@@ -1,6 +1,7 @@
 package com.namanmoo.kotlinboard.service
 
 import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
+import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Comment
 import com.namanmoo.kotlinboard.domain.entity.User
@@ -14,8 +15,8 @@ import java.util.NoSuchElementException
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
-    private val userService: UserService,
     private val articleRepository: ArticleRepository,
+    private val authorizeUserService: AuthorizeUserService
 ) {
 
     fun createComment(articleId: Long, commentRequest: CommentDto.Request): CommentDto.Response {
@@ -34,25 +35,13 @@ class CommentService(
         return commentList.map { CommentDto.Response.toResponse(it) }
     }
 
-    fun findAllCommentsInArticle(articleId: Long): List<CommentDto.ResponseWithComments> {
-        val topLevelComments = commentRepository.findAllByArticleIdAndParentCommentIdIsNull(articleId)
-        return topLevelComments.map { buildCommentWithReplies(it) }
-    }
-
-    private fun buildCommentWithReplies(comment: Comment): CommentDto.ResponseWithComments {
-        val replies = commentRepository.findAllByParentCommentId(comment.id)
-        val replyDtos = replies.map { buildCommentWithReplies(it) }
-
-        return CommentDto.ResponseWithComments.toResponse(comment, replyDtos)
-    }
-
     fun findCommentsInParentComment(commentId: Long): List<CommentDto.Response> {
         val commentList = commentRepository.findAllByParentCommentId(commentId)
         return commentList.map { CommentDto.Response.toResponse(it) }
     }
 
     fun findCommentsInUser(): List<CommentDto.Response> {
-        val user = userService.getCurrentUser()
+        val user = authorizeUserService.getCurrentUser()
         val commentList = commentRepository.findAllByCreatedBy(user.userName)
         return commentList.map { CommentDto.Response.toResponse(it) }
     }
@@ -66,16 +55,8 @@ class CommentService(
 
     fun deleteComment(commentId: Long): String {
         val comment = findById(commentId)
-        validateAndGetUser(comment)
+        authorizeUserService.validateUser(comment)
         commentRepository.delete(comment)
         return "댓글 삭제 성공"
-    }
-
-    fun validateAndGetUser(comment: Comment): User {
-        val user = userService.getCurrentUser()
-        if (user.role != ROLE.ADMIN && user.userName != comment.createdBy) {
-            throw UserNotAuthorizedException("작성자만 삭제/수정할 수 있습니다.")
-        }
-        return user
     }
 }

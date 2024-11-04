@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.config
 
-import com.namanmoo.kotlinboard.service.UserService
+import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.AuditorAware
@@ -10,12 +10,12 @@ import java.util.*
 @EnableJpaAuditing
 @Configuration
 class JpaConfig(
-    private val userService: UserService,
+    private val authorizeUserService: AuthorizeUserService,
 ) {
     @Bean
     fun auditorAware(): AuditorAware<String> {
         return AuditorAware {
-            Optional.of(userService.getCurrentUsername())
+            Optional.of(authorizeUserService.getCurrentUsername())
         }
     }
 }

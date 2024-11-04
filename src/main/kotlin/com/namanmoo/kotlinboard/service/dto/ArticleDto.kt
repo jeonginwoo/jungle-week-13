@@ -1,7 +1,6 @@
 package com.namanmoo.kotlinboard.service.dto
 
 import com.namanmoo.kotlinboard.domain.entity.Article
-import com.namanmoo.kotlinboard.service.dto.CommentDto.ResponseWithComments
 import java.io.Serializable
 import java.time.LocalDateTime
 
