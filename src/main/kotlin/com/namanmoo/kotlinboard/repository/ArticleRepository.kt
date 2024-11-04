@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface ArticleRepository : JpaRepository<Article, Long> {
     fun findAllByOrderByCreatedAtDesc(): List<Article>
     fun findAllByCreatedByOrderByCreatedAtDesc(userName: String): List<Article>
+    fun findAllByCreatedBy(userName: String): List<Article>
+    fun deleteAllByCreatedBy(username: String)
 }

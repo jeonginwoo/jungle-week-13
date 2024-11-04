@@ -5,6 +5,8 @@ import com.namanmoo.kotlinboard.common.authority.TokenInfo
 import com.namanmoo.kotlinboard.common.exception.custom.InvalidInputException
 import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import com.namanmoo.kotlinboard.domain.entity.User
+import com.namanmoo.kotlinboard.repository.ArticleRepository
+import com.namanmoo.kotlinboard.repository.CommentRepository
 import com.namanmoo.kotlinboard.repository.UserRepository
 import com.namanmoo.kotlinboard.service.dto.UserDto
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -19,7 +21,9 @@ class UserService(
     private val userRepository: UserRepository,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val authorizeUserService: AuthorizeUserService
+    private val authorizeUserService: AuthorizeUserService,
+    private val articleRepository: ArticleRepository,
+    private val commentRepository: CommentRepository
 ) {
 
     fun findAllUser(): List<UserDto.Response> {
@@ -62,7 +66,13 @@ class UserService(
         return UserDto.Response.toResponse(user)
     }
 
+    @Transactional
     fun deleteUser(): String {
+        val userName = authorizeUserService.getCurrentUsername()
+        val userArticles = articleRepository.findAllByCreatedBy(userName)
+        userArticles.forEach { commentRepository.deleteAllByArticleId(it.id) }
+        articleRepository.deleteAllByCreatedBy(userName)
+        commentRepository.deleteAllByCreatedBy(userName)
         userRepository.deleteById(authorizeUserService.getCurrentUsername())
         return "회원 정보 삭제 성공"
     }
