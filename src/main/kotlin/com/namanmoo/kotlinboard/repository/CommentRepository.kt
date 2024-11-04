@@ -10,4 +10,6 @@ interface CommentRepository: JpaRepository<Comment, Long> {
     fun findAllByArticleIdAndParentCommentIdIsNull(articleId: Long): List<Comment>
     fun findAllByParentCommentId(parentCommentId: Long): List<Comment>
     fun findAllByCreatedBy(username: String): List<Comment>
+    fun deleteAllByArticleId(articleId: Long)
+    fun deleteAllByParentCommentId(parentCommentId: Long)
 }

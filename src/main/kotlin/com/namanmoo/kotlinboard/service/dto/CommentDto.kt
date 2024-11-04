@@ -1,6 +1,5 @@
 package com.namanmoo.kotlinboard.service.dto
 
-import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.domain.entity.Comment
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -10,8 +9,8 @@ class CommentDto {
     data class Request(
         val content: String
     ): Serializable {
-        fun toComment(article: Article): Comment {
-            return Comment(content=this.content, articleId=article.id)
+        fun toComment(articleId: Long): Comment {
+            return Comment(content = this.content, articleId = articleId)
         }
     }
 

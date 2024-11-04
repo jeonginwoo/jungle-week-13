@@ -37,8 +37,7 @@ class ArticleService(
     }
 
     fun findById(id: Long): Article {
-        return articleRepository.findById(id)
-            .orElseThrow{ NoSuchElementException("게시글(id: $id)을 찾을 수 없습니다.") }
+        return articleRepository.findById(id).orElseThrow{ NoSuchElementException("게시글(id: $id)을 찾을 수 없습니다.") }
     }
 
     fun findArticle(id: Long): ArticleDto.Response {
@@ -69,9 +68,11 @@ class ArticleService(
         return ArticleDto.Response.toResponse(article)
     }
 
+    @Transactional
     fun deleteArticle(articleId: Long): String {
         val article = findById(articleId)
         authorizeUserService.validateUser(article)
+        commentRepository.deleteAllByArticleId(articleId)
         articleRepository.deleteById(articleId)
         return "삭제 성공"
     }
