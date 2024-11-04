@@ -1,4 +1,4 @@
-package com.namanmoo.kotlinboard.common.autority
+package com.namanmoo.kotlinboard.common.authority
 
 import com.namanmoo.kotlinboard.common.dto.CustomUser
 import io.jsonwebtoken.*

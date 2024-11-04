@@ -1,7 +1,7 @@
 package com.namanmoo.kotlinboard.service
 
-import com.namanmoo.kotlinboard.common.autority.JwtTokenProvider
-import com.namanmoo.kotlinboard.common.autority.TokenInfo
+import com.namanmoo.kotlinboard.common.authority.JwtTokenProvider
+import com.namanmoo.kotlinboard.common.authority.TokenInfo
 import com.namanmoo.kotlinboard.common.exception.custom.InvalidInputException
 import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
 import com.namanmoo.kotlinboard.domain.entity.User

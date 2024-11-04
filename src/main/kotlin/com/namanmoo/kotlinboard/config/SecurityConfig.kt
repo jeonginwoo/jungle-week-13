@@ -1,7 +1,7 @@
 package com.namanmoo.kotlinboard.config
 
-import com.namanmoo.kotlinboard.common.autority.JwtAuthenticationFilter
-import com.namanmoo.kotlinboard.common.autority.JwtTokenProvider
+import com.namanmoo.kotlinboard.common.authority.JwtAuthenticationFilter
+import com.namanmoo.kotlinboard.common.authority.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod

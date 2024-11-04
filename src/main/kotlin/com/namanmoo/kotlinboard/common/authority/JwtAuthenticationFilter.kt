@@ -1,4 +1,4 @@
-package com.namanmoo.kotlinboard.common.autority
+package com.namanmoo.kotlinboard.common.authority
 
 import com.namanmoo.kotlinboard.common.exception.custom.JwtTokenException
 import jakarta.servlet.FilterChain

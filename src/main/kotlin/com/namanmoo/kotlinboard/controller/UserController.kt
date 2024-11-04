@@ -1,6 +1,6 @@
 package com.namanmoo.kotlinboard.controller
 
-import com.namanmoo.kotlinboard.common.autority.TokenInfo
+import com.namanmoo.kotlinboard.common.authority.TokenInfo
 import com.namanmoo.kotlinboard.common.dto.BaseResponse
 import com.namanmoo.kotlinboard.service.ArticleService
 import com.namanmoo.kotlinboard.service.CommentService
