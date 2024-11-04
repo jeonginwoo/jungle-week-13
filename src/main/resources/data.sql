@@ -1,10 +1,10 @@
 INSERT INTO users (user_name, nickname, role, password, created_by, created_at, modified_at)
 VALUES
     ('admin0', 'admin', 'ADMIN', 'Zz12341234!', 'anonymousUser', now(), now()),
-    ('user1', 'aaa', 'USER', 'Aa12341234!', 'anonymousUser', now(), now()),
-    ('user2', 'bbb', 'USER', 'Bb12341234!', 'anonymousUser', now(), now()),
-    ('user3', 'ccc', 'USER', 'Cc12341234!', 'anonymousUser', now(), now()),
-    ('user4', 'ddd', 'USER', 'Dd12341234!', 'anonymousUser', now(), now());
+    ('user1', '정글', 'USER', 'Aa12341234!', 'anonymousUser', now(), now()),
+    ('user2', '핀토스', 'USER', 'Aa12341234!', 'anonymousUser', now(), now()),
+    ('user3', '아논페이지', 'USER', 'Aa12341234!', 'anonymousUser', now(), now()),
+    ('user4', '포크', 'USER', 'Aa12341234!', 'anonymousUser', now(), now());
 
 INSERT INTO article (title, content, created_by, created_at, modified_at)
 VALUES
