@@ -7,10 +7,11 @@ import java.time.LocalDateTime
 class CommentDto {
 
     data class Request(
-        val content: String
+        val content: String,
+        val parentCommentId: Long? = null,
     ): Serializable {
         fun toComment(articleId: Long): Comment {
-            return Comment(content = this.content, articleId = articleId)
+            return Comment(content = this.content, articleId = articleId, parentCommentId = this.parentCommentId)
         }
     }
 

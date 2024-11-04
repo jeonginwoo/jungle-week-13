@@ -40,7 +40,7 @@ class CommentService(
 
     fun findCommentsInUser(): List<CommentDto.Response> {
         val user = authorizeUserService.getCurrentUser()
-        val commentList = commentRepository.findAllByCreatedBy(user.userName)
+        val commentList = commentRepository.findAllByCreatedByOrderByCreatedAtDesc(user.userName)
         return commentList.map { CommentDto.Response.toResponse(it) }
     }
 

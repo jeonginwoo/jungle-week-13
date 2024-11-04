@@ -49,7 +49,7 @@ class ArticleService(
         return ArticleDto.ResponseWithComments.toResponse(article, comments)
 
     } private fun findAllCommentsInArticle(articleId: Long): List<CommentDto.ResponseWithComments> {
-        val topLevelComments = commentRepository.findAllByArticleIdAndParentCommentIdIsNull(articleId)
+        val topLevelComments = commentRepository.findAllByArticleIdAndParentCommentIdIsNullOrderByCreatedAtDesc(articleId)
         return topLevelComments.map { buildCommentWithReplies(it) }
 
     } private fun buildCommentWithReplies(comment: Comment): CommentDto.ResponseWithComments {
