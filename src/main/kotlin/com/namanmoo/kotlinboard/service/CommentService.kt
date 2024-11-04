@@ -28,13 +28,13 @@ class CommentService(
 
     fun findCommentsInArticle(articleId: Long): List<CommentDto.Response> {
         articleRepository.findById(articleId).orElseThrow{ NoSuchElementException("게시글(id: $articleId)을 찾을 수 없습니다.") }
-        val commentList = commentRepository.findAllByArticleId(articleId)
+        val commentList = commentRepository.findAllByArticleIdOrderByCreatedAtDesc(articleId)
         return commentList.map { CommentDto.Response.toResponse(it) }
     }
 
     fun findCommentsInParentComment(commentId: Long): List<CommentDto.Response> {
         findById(commentId)
-        val commentList = commentRepository.findAllByParentCommentId(commentId)
+        val commentList = commentRepository.findAllByParentCommentIdOrderByCreatedAtDesc(commentId)
         return commentList.map { CommentDto.Response.toResponse(it) }
     }
 
@@ -47,6 +47,7 @@ class CommentService(
     @Transactional
     fun updateComment(commentId: Long, commentRequest: CommentDto.Request): CommentDto.Response {
         val comment = findById(commentId)
+        authorizeUserService.validateUser(comment)
         comment.updateComment(commentRequest)
         return CommentDto.Response.toResponse(comment)
     }

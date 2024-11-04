@@ -1,8 +1,6 @@
 package com.namanmoo.kotlinboard.service
 
-import com.namanmoo.kotlinboard.common.exception.custom.UserNotAuthorizedException
 import com.namanmoo.kotlinboard.common.service.AuthorizeUserService
-import com.namanmoo.kotlinboard.common.status.ROLE
 import com.namanmoo.kotlinboard.domain.entity.Article
 import com.namanmoo.kotlinboard.domain.entity.Comment
 import com.namanmoo.kotlinboard.service.dto.ArticleDto
@@ -55,7 +53,7 @@ class ArticleService(
         return topLevelComments.map { buildCommentWithReplies(it) }
 
     } private fun buildCommentWithReplies(comment: Comment): CommentDto.ResponseWithComments {
-        val replies = commentRepository.findAllByParentCommentId(comment.id)
+        val replies = commentRepository.findAllByParentCommentIdOrderByCreatedAtDesc(comment.id)
         val replyDtos = replies.map { buildCommentWithReplies(it) }
         return CommentDto.ResponseWithComments.toResponse(comment, replyDtos)
     }
