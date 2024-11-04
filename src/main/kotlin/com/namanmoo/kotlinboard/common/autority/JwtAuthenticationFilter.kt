@@ -20,7 +20,7 @@ class JwtAuthenticationFilter(
         val httpServletRequest = request as HttpServletRequest
         val httpServletResponse = response as HttpServletResponse
 
-        try {
+//        try {
             // 토큰을 추출
             val token = resolveToken(httpServletRequest)
 
@@ -29,14 +29,15 @@ class JwtAuthenticationFilter(
                 // 인증 정보를 추출하여 SecurityContext에 설정
                 val authentication = jwtTokenProvider.getAuthentication(token)
                 SecurityContextHolder.getContext().authentication = authentication
-            } else {
-                throw JwtTokenException("토큰이 유효하지 않습니다.")
             }
-        } catch (ex: JwtTokenException) {
-            // JWT 토큰 관련 예외가 발생한 경우 처리
-            handleException(httpServletResponse, ex)
-            return  // 예외가 발생하면 체인 실행을 중단합니다.
-        }
+//            } else {
+//                throw JwtTokenException("토큰이 유효하지 않습니다.")
+//            }
+//        } catch (ex: JwtTokenException) {
+//            // JWT 토큰 관련 예외가 발생한 경우 처리
+//            handleException(httpServletResponse, ex)
+//            return  // 예외가 발생하면 체인 실행을 중단합니다.
+//        }
 
         // 다음 필터로 요청을 전달
         chain?.doFilter(request, response)
