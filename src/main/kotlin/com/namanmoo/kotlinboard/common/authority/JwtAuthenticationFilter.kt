@@ -18,7 +18,7 @@ class JwtAuthenticationFilter(
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
-        val httpServletResponse = response as HttpServletResponse
+//        val httpServletResponse = response as HttpServletResponse
 
 //        try {
             // 토큰을 추출

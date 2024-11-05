@@ -51,7 +51,7 @@ class UserDto {
         val userName: String,
         val nickname: String,
         val userRole: String,
-        val password: String,
+//        val password: String,
         val createdAt: LocalDateTime,
         val modifiedAt: LocalDateTime
     ): Serializable {
@@ -60,7 +60,7 @@ class UserDto {
                 userName = user.userName,
                 nickname = user.nickname,
                 userRole = user.role.toString(),
-                password = user.password,
+//                password = user.password,
                 createdAt = user.createdAt,
                 modifiedAt = user.modifiedAt
             )

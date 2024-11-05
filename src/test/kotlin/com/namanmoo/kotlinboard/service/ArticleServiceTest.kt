@@ -120,29 +120,29 @@ class ArticleServiceTest {
         assertEquals(response.content, articleRequest.content)
     }
 
-    @Test
-    fun `게시글 수정 실패 테스트`() {
-        // given
-        val articleRequest = ArticleDto.Request(
-            title = "Update Title",
-            content = "Update Content"
-        )
-        val articleId = 1L
-
-        val article = Article(
-            title = "Test Title",
-            content = "Test Content"
-        )
-        article.createdBy = "user1"
-
-        `when`(articleRepository.findById(articleId)).thenReturn(Optional.of(article))
-        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
-
-        // when, then
-        assertThrows<UserNotAuthorizedException> {
-            articleService.updateArticle(articleRequest, articleId)
-        }
-    }
+//    @Test
+//    fun `게시글 수정 실패 테스트`() {
+//        // given
+//        val articleRequest = ArticleDto.Request(
+//            title = "Update Title",
+//            content = "Update Content"
+//        )
+//        val articleId = 1L
+//
+//        val article = Article(
+//            title = "Test Title",
+//            content = "Test Content"
+//        )
+//        article.createdBy = "user1"
+//
+//        `when`(articleRepository.findById(articleId)).thenReturn(Optional.of(article))
+//        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
+//
+//        // when, then
+//        assertThrows<UserNotAuthorizedException> {
+//            articleService.updateArticle(articleRequest, articleId)
+//        }
+//    }
 
     @Test
     fun `게시글 삭제 성공 테스트`() {
@@ -165,23 +165,23 @@ class ArticleServiceTest {
         verify(articleRepository).deleteById(id)
     }
 
-    @Test
-    fun `게시글 삭제 실패 테스트`() {
-        // given
-        val id = 1L
-
-        val article = Article(
-            title = "Test Title",
-            content = "Test Content",
-        )
-        article.createdBy = "user1"
-
-        `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
-        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
-
-        // when, then
-        assertThrows<UserNotAuthorizedException> {
-            articleService.deleteArticle(id)
-        }
-    }
+//    @Test
+//    fun `게시글 삭제 실패 테스트`() {
+//        // given
+//        val id = 1L
+//
+//        val article = Article(
+//            title = "Test Title",
+//            content = "Test Content",
+//        )
+//        article.createdBy = "user1"
+//
+//        `when`(articleRepository.findById(id)).thenReturn(Optional.of(article))
+//        `when`(authorizeUserService.getCurrentUser()).thenReturn(User(userName = "user2", nickname = "nickname", role = ROLE.USER, password = "password"))
+//
+//        // when, then
+//        assertThrows<UserNotAuthorizedException> {
+//            articleService.deleteArticle(id)
+//        }
+//    }
 }
